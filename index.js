@@ -52,7 +52,7 @@ app.put('/saveUser',urlencodedParser, function (req, res) {
     con.query("select max(id)+1 as id from employee;", function (err, result) {
     if (err) throw err;
      id=result;
-     var sql="insert into employee values ("+Number(result[0].id)+",'"+req.body.name+"' , "+req.body.salary+" );";
+     var sql="insert into employee values ("+Number(result[0].id)+",'"+req.body.name+"' , "+req.body.salary+",'"+req.body.imageurl+"' );";
      console.log(sql);
      con.query(sql, function (errn, result) {
      if (errn) throw errn;
@@ -68,8 +68,9 @@ app.post('/updateUser',urlencodedParser, function (req, res) {
    console.log("Got a POST request for the homepage");
    console.log(req.body);
    console.log("id"+req.body.name+"name"+req.body.name+"Salary"+req.body.salary);
+   console.log("imageurl"+req.body.imageurl);
     var id;
-    con.query("update employee set userName='"+req.body.name+"', salary="+req.body.salary+" where id = "+req.body.id, function (err, result) {
+    con.query("update employee set userName='"+req.body.name+"', salary="+req.body.salary+",imageurl="+req.body.imageurl+" where id = "+req.body.id, function (err, result) {
     if (err) throw err
      res.send(result);
 
@@ -108,6 +109,15 @@ app.get('/getOneuser', function (req, res) {
    });
 })
 
+
+app.get('/getImageURL', function (req, res) {
+   console.log("Got a GET request for /getImageURL");
+   console.log("My ID is " + req.query.id);
+   con.query("select id,name,image_URL from employee where id="+req.query.id+";", function(err,result){
+    if (err) throw err;
+    res.send(result);
+   });
+})
 
 var server = app.listen(8081, function () {
 
